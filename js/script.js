@@ -9,8 +9,7 @@ const playAgain = document.querySelector(".play-again");
 
 // Global variables
 let word = "magnolia";
-// can store array in a constant since updating an element of an array does not change the binding of the variable, just updates the individual objects of the array
-const guessedLetters = [];
+let guessedLetters = [];
 let remainingGuesses = 8;
 
 // Fetch random word and call placeholder function
@@ -41,37 +40,15 @@ const createPlaceholder = function(word) {
   wordInProgress.innerText = placeholder
 }
 
-const countRemainingGuesses = function(guessedLetter) {
-  // convert word to upper case
-  let upperWord = word.toUpperCase();
-
-  // check if guessed letter is a character in the word if so display a message
-  if(upperWord.includes(guessedLetter)) {
-    message.innerText = `The word contains the letter ${guessedLetter}`
-  } else {
-    // if not a match decrement the remaining guesses
-    message.innerText = `The word does NOT contain the letter ${guessedLetter}`
-    remainingGuesses -= 1
-  }
-
-  // check number of guesses remaining
-  if(remainingGuesses === 0) {
-    message.innerText = `Sorry, you have no guesses left, the word is ${word}`
-  } else if(remainingGuesses === 1) {
-    remainingSpan.innerText = `${remainingGuesses} guess`
-  } else {
-    remainingSpan.innerText = `${remainingGuesses} guesses`
-  }
-
-}
-
 // check if guessed word is equal to the correct word
 const wonGame = function(progessWord) {
   // convert to lower case to compare to lowercase word
+  progessWord = progessWord.toLowerCase();
   // once equal will print a message
-  if(progessWord.toLowerCase() === word) {
+  if(progessWord === word) {
     message.classList.add("win");
-    message.innerText = `You guessed the correct word ${progessWord}. Congrats! 🎉`
+    message.innerText = `You guessed the correct word ${progessWord}. Congrats! 🎉`;
+    startOver();
   }
 }
 
@@ -91,6 +68,31 @@ const updateWordInProgess = function(guessedLetters) {
   wordInProgress.innerText = progessWord.join("");
   // pass in the progess word as a string to compare to the game word
   wonGame(progessWord.join(""))
+}
+
+const countRemainingGuesses = function(guessedLetter) {
+  // convert word to upper case
+  let upperWord = word.toUpperCase();
+
+  // check if guessed letter is a character in the word if so display a message
+  if(upperWord.includes(guessedLetter)) {
+    message.innerText = `The word contains the letter ${guessedLetter}`
+  } else {
+    // if not a match decrement the remaining guesses
+    message.innerText = `The word does NOT contain the letter ${guessedLetter}`
+    remainingGuesses -= 1
+  }
+
+  // check number of guesses remaining
+  if(remainingGuesses === 0) {
+    message.innerText = `Sorry, you have no guesses left, the word is ${word}`;
+    startOver();
+  } else if(remainingGuesses === 1) {
+    remainingSpan.innerText = `${remainingGuesses} guess`
+  } else {
+    remainingSpan.innerText = `${remainingGuesses} guesses`
+  }
+
 }
 
 // validate user guess - 1 letter & A-Z letter
@@ -140,6 +142,14 @@ const displayGuesses = function() {
   })
 }
 
+// hide elements and start game over
+const startOver = function() {
+  guessBtn.classList.add("hide");
+  remaining.classList.add("hide");
+  guesses.classList.add("hide");
+  playAgain.classList.remove("hide")
+}
+
 // ************** EVENT LISTENERS **************
 guessBtn.addEventListener("click", function(e) {
   // prevent form from submitting
@@ -157,4 +167,22 @@ guessBtn.addEventListener("click", function(e) {
   makeGuess(validatedInput);
 })
 
+playAgain.addEventListener("click", function() {
+  message.classList.remove("win");
+  message.innerText = "";
+  guesses.innerHTML = "";
+  remainingGuesses = 8;
+  guessedLetters = [];
+
+  // hide playAgain button
+  remainingSpan.innerText = `${remainingGuesses} guesses`;
+  guessBtn.classList.remove("hide");
+  remaining.classList.remove('hide');
+  guesses.classList.remove("hide");
+  playAgain.classList.add("hide");
+
+  // get a new word to start again
+  getWord();
+  console.log(word)
+})
 
