@@ -21,22 +21,31 @@ const createPlaceholder = function(word) {
   wordInProgress.innerText = placeholder
 }
 
-createPlaceholder(word)
+createPlaceholder(word);
+
+const wonGame = function(progessWord) {
+  progessWord = progessWord.join("").toLowerCase();
+  if(progessWord === word) {
+    message.classList.add("win");
+    message.innerText = `You guessed the correct word ${progessWord}. Congrats! 🎉`
+  }
+}
 
 const updateWordInProgess = function(guessedLetters) {
-  let updateWord = [];
+  let progessWord = [];
   let wordUpper = word.toUpperCase();
   let wordArray = wordUpper.split("");
   // check if each letter in guessed letters is in the word array
   wordArray.forEach(function(letter) {
     if(guessedLetters.includes(letter)) {
-      updateWord.push(letter)
+      progessWord.push(letter)
     } else {
-      updateWord.push('●')
+      progessWord.push('●')
     }
   })
 
-  wordInProgress.innerText = updateWord.join("")
+  wordInProgress.innerText = progessWord.join("");
+  wonGame(progessWord)
 }
 
 // validate user guess - 1 letter & A-Z letter
