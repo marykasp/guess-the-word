@@ -11,15 +11,32 @@ const guessedLetters = []
 
 
 // ************** FUNCTIONS **************
-const updateProgessWord = function(word) {
-  let progessWord = "";
-  // console.log(word)
+const createPlaceholder = function(word) {
+  let placeholder = ""
   word.split("").forEach(function(letter) {
-    progessWord += "●"
+    placeholder += ('●')
   })
 
-  // update wordInProgess element
-  wordInProgress.innerText = progessWord;
+  // update the text of the word in progress element
+  wordInProgress.innerText = placeholder
+}
+
+createPlaceholder(word)
+
+const updateWordInProgess = function(guessedLetters) {
+  let updateWord = [];
+  let wordUpper = word.toUpperCase();
+  let wordArray = wordUpper.split("");
+  // check if each letter in guessed letters is in the word array
+  wordArray.forEach(function(letter) {
+    if(guessedLetters.includes(letter)) {
+      updateWord.push(letter)
+    } else {
+      updateWord.push('●')
+    }
+  })
+
+  wordInProgress.innerText = updateWord.join("")
 }
 
 // validate user guess - 1 letter & A-Z letter
@@ -49,6 +66,8 @@ const makeGuess = function(letter) {
     guessedLetters.push(letter);
     // display the guess to the user
     displayGuesses();
+    // update the progess
+    updateWordInProgess(guessedLetters)
   }
   console.log(guessedLetters)
 }
@@ -81,4 +100,5 @@ guessBtn.addEventListener("click", function(e) {
   // pass validtatedInput to makeGuess function
   makeGuess(validatedInput);
 })
-updateProgessWord(word);
+
+
