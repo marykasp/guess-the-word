@@ -8,12 +8,28 @@ const message = document.querySelector(".message");
 const playAgain = document.querySelector(".play-again");
 
 // Global variables
-const word = "magnolia";
+let word = "magnolia";
 // can store array in a constant since updating an element of an array does not change the binding of the variable, just updates the individual objects of the array
 const guessedLetters = [];
 let remainingGuesses = 8;
 
+// Fetch random word and call placeholder function
+const getWord = async function() {
+  // returns a text file
+  const response = await fetch('https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt');
 
+  const data = await response.text();
+  // convert to a word array
+  const wordArray = data.split("\n");
+  const randomIndex = Math.floor(Math.random() * wordArray.length);
+
+  // reassign the global word to a random word from this list
+  word = wordArray[randomIndex].trim();
+  console.log(word)
+  createPlaceholder(word)
+}
+
+getWord()
 // ************** FUNCTIONS **************
 const createPlaceholder = function(word) {
   let placeholder = ""
@@ -25,14 +41,15 @@ const createPlaceholder = function(word) {
   wordInProgress.innerText = placeholder
 }
 
-createPlaceholder(word);
-
 const countRemainingGuesses = function(guessedLetter) {
   // convert word to upper case
   let upperWord = word.toUpperCase();
+
+  // check if guessed letter is a character in the word if so display a message
   if(upperWord.includes(guessedLetter)) {
     message.innerText = `The word contains the letter ${guessedLetter}`
   } else {
+    // if not a match decrement the remaining guesses
     message.innerText = `The word does NOT contain the letter ${guessedLetter}`
     remainingGuesses -= 1
   }
