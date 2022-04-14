@@ -6,8 +6,12 @@ const remaining = document.querySelector(".remaining");
 const remainingSpan = document.querySelector(".remaining span");
 const message = document.querySelector(".message");
 const playAgain = document.querySelector(".play-again");
+
+// Global variables
 const word = "magnolia";
-const guessedLetters = []
+// can store array in a constant since updating an element of an array does not change the binding of the variable, just updates the individual objects of the array
+const guessedLetters = [];
+let remainingGuesses = 8;
 
 
 // ************** FUNCTIONS **************
@@ -23,9 +27,32 @@ const createPlaceholder = function(word) {
 
 createPlaceholder(word);
 
+const countRemainingGuesses = function(guessedLetter) {
+  // convert word to upper case
+  let upperWord = word.toUpperCase();
+  if(upperWord.includes(guessedLetter)) {
+    message.innerText = `The word contains the letter ${guessedLetter}`
+  } else {
+    message.innerText = `The word does NOT contain the letter ${guessedLetter}`
+    remainingGuesses -= 1
+  }
+
+  // check number of guesses remaining
+  if(remainingGuesses === 0) {
+    message.innerText = `Sorry, you have no guesses left, the word is ${word}`
+  } else if(remainingGuesses === 1) {
+    remainingSpan.innerText = `${remainingGuesses} guess`
+  } else {
+    remainingSpan.innerText = `${remainingGuesses} guesses`
+  }
+
+}
+
+// check if guessed word is equal to the correct word
 const wonGame = function(progessWord) {
-  progessWord = progessWord.join("").toLowerCase();
-  if(progessWord === word) {
+  // convert to lower case to compare to lowercase word
+  // once equal will print a message
+  if(progessWord.toLowerCase() === word) {
     message.classList.add("win");
     message.innerText = `You guessed the correct word ${progessWord}. Congrats! 🎉`
   }
@@ -45,7 +72,8 @@ const updateWordInProgess = function(guessedLetters) {
   })
 
   wordInProgress.innerText = progessWord.join("");
-  wonGame(progessWord)
+  // pass in the progess word as a string to compare to the game word
+  wonGame(progessWord.join(""))
 }
 
 // validate user guess - 1 letter & A-Z letter
@@ -75,10 +103,12 @@ const makeGuess = function(letter) {
     guessedLetters.push(letter);
     // display the guess to the user
     displayGuesses();
+    // display message about remaining guesses - pass in the guess
+    countRemainingGuesses(letter)
     // update the progess
     updateWordInProgess(guessedLetters)
   }
-  console.log(guessedLetters)
+
 }
 
 // Show guessed letters
