@@ -22,16 +22,7 @@ const updateProgessWord = function(word) {
   wordInProgress.innerText = progessWord;
 }
 
-const makeGuess = function(letter) {
-  letter = letter.toUpperCase();
-  if(guessedLetters.includes(letter)) {
-    message.innerText = `You already guessed ${letter} before. Try again!`
-  } else {
-    guessedLetters.push(letter)
-  }
-  console.log(guessedLetters)
-}
-
+// validate user guess - 1 letter & A-Z letter
 const validateInput = function(input) {
   const acceptedLetter = /[a-zA-Z]/
 
@@ -46,6 +37,32 @@ const validateInput = function(input) {
   } else {
     return input
   }
+}
+
+// add letter to guessedLetters array if not already guessed, display a message if not
+const makeGuess = function(letter) {
+  letter = letter.toUpperCase();
+  if(guessedLetters.includes(letter)) {
+    message.innerText = `You already guessed ${letter} before. Try again!`
+  } else {
+    // add unique guess to guessedLetters array
+    guessedLetters.push(letter);
+    // display the guess to the user
+    displayGuesses();
+  }
+  console.log(guessedLetters)
+}
+
+// Show guessed letters
+const displayGuesses = function() {
+  guesses.innerHTML = "";
+  // iterate over guessedLetters and add each letter as a list item
+  guessedLetters.forEach(function (letter) {
+    // create a new list item for each letter
+    let listItem = document.createElement("li");
+    listItem.innerText = letter;
+    guesses.append(listItem);
+  })
 }
 
 // ************** EVENT LISTENERS **************
